@@ -1,0 +1,12 @@
+# Environment and secrets
+.env
+*.json
+
+# Backup files
+*.sql.gz
+
+# rclone temporary config
+rclone.conf
+
+# macOS system files
+.DS_Store 
