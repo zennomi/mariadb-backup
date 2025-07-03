@@ -33,28 +33,13 @@ if grep -q "Got error: 1044" mysqldump.err; then
 fi
 rm -f mysqldump.err
 
-# Install gdrive if not present
-if ! command -v gdrive &> /dev/null; then
-  echo "gdrive not found, installing..."
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install gdrive
-  else
-    sudo add-apt-repository ppa:prasmussen/gdrive -y
-    sudo apt-get update
-    sudo apt-get install gdrive -y
-  fi
-fi
-
-# Authenticate gdrive with service account
-export GOOGLE_APPLICATION_CREDENTIALS="$SERVICE_ACCOUNT_JSON"
-
-# Upload to Google Drive
-# Note: gdrive does not natively support service accounts, so use 'gdrive' alternatives like 'rclone' for service account support
+# Install rclone if not present
 if ! command -v rclone &> /dev/null; then
   echo "rclone not found, installing..."
   if [[ "$OSTYPE" == "darwin"* ]]; then
     brew install rclone
   else
+    sudo apt-get update
     sudo apt-get install rclone -y
   fi
 fi
