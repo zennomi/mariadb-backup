@@ -1,11 +1,14 @@
 #!/bin/bash
 set -e
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Load environment variables from .env
-if [ -f .env ]; then
-  export $(grep -v '^#' .env | xargs)
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
 else
-  echo ".env file not found!"
+  echo ".env file not found in $SCRIPT_DIR!"
   exit 1
 fi
 
@@ -45,6 +48,11 @@ if ! command -v rclone &> /dev/null; then
 fi
 
 # Configure rclone if not already configured
+# Convert SERVICE_ACCOUNT_JSON to absolute path if it's relative
+if [[ "$SERVICE_ACCOUNT_JSON" != /* ]]; then
+  SERVICE_ACCOUNT_JSON="$SCRIPT_DIR/$SERVICE_ACCOUNT_JSON"
+fi
+
 echo "[gdrive]
 type = drive
 scope = drive
